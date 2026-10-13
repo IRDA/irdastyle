@@ -7,6 +7,13 @@
   header/footer JavaScript and cover images; `irda_paged()` is the matching
   R Markdown output format and `render_irda_pdf()` exports a report to PDF via
   Chrome. The template ships under `inst/rmarkdown/templates/irda-report`.
+* The report template fixes two issues that affected real-world use: cover
+  images (logo, cover, bandeau) are now resolved reliably (data-URI fallback
+  when the assets are not next to the document), and table-of-contents page
+  numbers are correct for headings containing non-ASCII characters (the
+  percent-encoded anchors are decoded before pagination).
+* `render_irda_pdf()` now defaults to a 300 second timeout (long reports with
+  many images) and reports a clear error when Chrome cannot be found.
 * Added a "Rapports IRDA" vignette.
 
 ## Documentation

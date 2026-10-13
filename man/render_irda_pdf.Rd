@@ -4,13 +4,18 @@
 \alias{render_irda_pdf}
 \title{Render an IRDA Report to PDF}
 \usage{
-render_irda_pdf(input, output = NULL, ...)
+render_irda_pdf(input, output = NULL, timeout = 300, ...)
 }
 \arguments{
 \item{input}{Path to the \code{.Rmd} or \code{.html} file to render.}
 
 \item{output}{Path of the PDF to produce. Defaults to \code{input} with the
 extension replaced by \code{.pdf}.}
+
+\item{timeout}{Maximum time, in seconds, to wait for Chrome to print the
+document. Long reports with many images can take a while to lay out, so
+the default is deliberately generous (300 seconds). Increase it further
+if needed.}
 
 \item{...}{Additional arguments passed on to \code{\link[pagedown:chrome_print]{pagedown::chrome_print()}}.}
 }

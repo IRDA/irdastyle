@@ -18,34 +18,43 @@
   file
 }
 
-# Absolute `file://` URL for an asset, or `NULL` when it cannot be found.
-.irda_asset_url <- function(file) {
-  path <- .irda_asset(file)
+# Data URI for a bundled asset, or `NA` when it cannot be found. Data URIs are
+# used (rather than `file://` URLs) because they are always loadable, including
+# from headless Chrome when the report is not self-contained.
+.irda_asset_data_uri <- function(file) {
+  path <- file.path(.irda_template_dir(), file)
   if (!file.exists(path)) {
-    return(NULL)
+    return(NA_character_)
   }
-  path <- normalizePath(path, winslash = "/", mustWork = FALSE)
-  if (.Platform$OS.type == "windows" && !grepl("^[A-Za-z]:", path)) {
-    path <- paste0("/", path)
+  if (!requireNamespace("knitr", quietly = TRUE)) {
+    return(NA_character_)
   }
-  paste0("file://", utils::URLencode(path, reserved = TRUE))
+  knitr::image_uri(path)
 }
 
 # Build the inline script that tells header_overrides.html where the cover
-# images live, so the report renders even when the assets are not copied next
-# to the document.
+# images live. Only assets that are missing from the current directory are
+# overridden (with a data URI); local files keep being referenced by their
+# relative name so users can customise them.
 .irda_assets_script <- function() {
   files <- c(
     logo = "logo.png",
     cover = "image_couverture.png",
     bandeau = "bandeaugauche.png"
   )
-  urls <- vapply(files, .irda_asset_url, character(1))
-  if (any(vapply(urls, is.null, logical(1)))) {
+  missing <- files[!file.exists(files)]
+  if (length(missing) == 0L) {
     return(NULL)
   }
+
+  uris <- vapply(missing, .irda_asset_data_uri, character(1))
+  uris <- uris[!is.na(uris)]
+  if (length(uris) == 0L) {
+    return(NULL)
+  }
+
   entries <- paste(
-    sprintf("%s: %s", base::names(urls), vapply(urls, function(u) {
+    sprintf("%s: %s", base::names(uris), vapply(uris, function(u) {
       sprintf("'%s'", u)
     }, character(1))),
     collapse = ", "
@@ -188,6 +197,10 @@ create_irda_report <- function(path = ".",
 #' @param input Path to the `.Rmd` or `.html` file to render.
 #' @param output Path of the PDF to produce. Defaults to `input` with the
 #'   extension replaced by `.pdf`.
+#' @param timeout Maximum time, in seconds, to wait for Chrome to print the
+#'   document. Long reports with many images can take a while to lay out, so
+#'   the default is deliberately generous (300 seconds). Increase it further
+#'   if needed.
 #' @param ... Additional arguments passed on to [pagedown::chrome_print()].
 #'
 #' @return Invisibly, the path to the generated PDF.
@@ -200,7 +213,7 @@ create_irda_report <- function(path = ".",
 #'
 #' @seealso [create_irda_report()], [irda_paged()]
 #' @export
-render_irda_pdf <- function(input, output = NULL, ...) {
+render_irda_pdf <- function(input, output = NULL, timeout = 300, ...) {
   .irda_require("pagedown")
 
   if (!file.exists(input)) {
@@ -210,6 +223,16 @@ render_irda_pdf <- function(input, output = NULL, ...) {
     output <- sub("\\.(Rmd|rmd|html)$", ".pdf", input)
   }
 
-  pagedown::chrome_print(input, output = output, ...)
+  chrome <- tryCatch(pagedown::find_chrome(), error = function(e) NULL)
+  if (length(chrome) == 0L || !nzchar(chrome[[1]])) {
+    stop(
+      "Chrome or Chromium could not be found.\n",
+      "Install Google Chrome, or set the CHROME_PATH environment variable, ",
+      "then try again.",
+      call. = FALSE
+    )
+  }
+
+  pagedown::chrome_print(input, output = output, timeout = timeout, ...)
   invisible(output)
 }

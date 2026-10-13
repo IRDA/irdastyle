@@ -24,6 +24,24 @@
       if (priorBefore) await priorBefore();
 
       // ============================================
+      // NORMALISE TOC ANCHORS (non-ASCII headings)
+      // pandoc percent-encodes hrefs (e.g. "#%C3%A9l%C3%A9ments") while the
+      // element ids keep the raw characters ("éléments"). The CSS
+      // target-counter(attr(href), page) then fails to resolve the target and
+      // the TOC page number falls back to 0. Decode the hrefs so they match
+      // the ids.
+      // ============================================
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        const raw = a.getAttribute('href');
+        if (!raw || raw.indexOf('%') === -1) return;
+        try {
+          a.setAttribute('href', '#' + decodeURIComponent(raw.slice(1)));
+        } catch (e) {
+          /* keep the original href when it cannot be decoded */
+        }
+      });
+
+      // ============================================
       // READ YAML METADATA FROM META TAGS
       // ============================================
       const getMeta = (name) => {
