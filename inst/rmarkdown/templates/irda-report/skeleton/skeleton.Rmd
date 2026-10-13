@@ -1,0 +1,108 @@
+---
+title: "Titre du rapport"
+subtitle: "Type de rapport"
+author: "Responsable scientifique : Prénom Nom, Ph. D."
+date: "Date : `r format(Sys.Date(), '%B %Y')`"
+
+# --- En-têtes et pieds de page ---
+header-left: "Rapport IRDA"        # En haut à gauche
+header-middle: ""                  # En haut au centre (optionnel)
+header-right: "IRDA"               # En haut à droite
+footer-left: ""                    # En bas à gauche
+footer-middle: ""                  # En bas au centre (optionnel)
+footer-right: ""                   # En bas à droite
+
+# --- Position du numéro de page ---
+# "right" = toujours à droite | "alternate" = style livre (pair/impair)
+page-number-position: "alternate"
+
+output: irdastyle::irda_paged
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE, warning = FALSE, message = FALSE,
+  fig.width = 10, fig.height = 7, out.width = "100%"
+)
+library(ggplot2)
+library(irdastyle)
+```
+
+```{r header-footer-meta, results = 'asis', echo = FALSE}
+# Injecte les champs YAML personnalisés comme balises meta (lu par le JavaScript)
+`%||%` <- function(a, b) if (is.null(a)) b else a
+meta <- rmarkdown::metadata
+emit <- function(name, value) {
+  cat('<meta name="', name, '" content="', value, '">\n', sep = "")
+}
+emit("header-left", meta[["header-left"]] %||% meta$title %||% "")
+emit("header-middle", meta[["header-middle"]] %||% "")
+emit("header-right", meta[["header-right"]] %||% meta$author %||% "")
+emit("footer-left", meta[["footer-left"]] %||% "")
+emit("footer-middle", meta[["footer-middle"]] %||% "")
+emit("footer-right", meta[["footer-right"]] %||% meta$date %||% "")
+emit("page-number-position", meta[["page-number-position"]] %||% "right")
+```
+
+# Introduction {#introduction}
+
+## Résumé {#resume}
+
+::: {.resume-grid}
+::: {.resume-card}
+#### État des cultures
+Le rendement global est de 15 % supérieur à la moyenne sur cinq ans.
+:::
+
+::: {.resume-card}
+#### Confiance du modèle
+Les scores de validation ($R^2 = 0{,}85$) indiquent une fiabilité élevée.
+:::
+:::
+
+::: {.infobox .info}
+#### Recommandation
+Concentrer l'application d'engrais sur les zones où le rendement marginal est
+le plus élevé.
+:::
+
+## Indicateurs {#indicateurs}
+
+::: {.value-box-grid}
+::: {.value-box .primary}
+<span class="value">+15%</span>
+<span class="label">Rendement</span>
+:::
+
+::: {.value-box .secondary}
+<span class="value">0,85</span>
+<span class="label">R² du modèle</span>
+:::
+:::
+
+## Graphique {#graphique}
+
+<div class="chart-container">
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, colour = Species)) +
+  geom_point() +
+  theme_irda() +
+  scale_color_irda()
+```
+</div>
+
+::: {.section-break .secondary}
+
+# Deuxième section {#deuxieme-section}
+
+:::
+
+## Texte
+
+::: {.two-column-text}
+#### Analyse
+
+Ce modèle combine plusieurs sources de données et une validation croisée à
+cinq plis. Les zones sous-performantes peuvent être ciblées par une
+application à taux variable.
+:::

@@ -2,19 +2,51 @@
 % Please edit documentation in R/flextable_irda.R
 \name{flextable_irda}
 \alias{flextable_irda}
-\title{Apply IRDA Theme to flextable Objects}
+\title{Apply the IRDA Theme to 'flextable' Objects}
 \usage{
-flextable_irda(x, ...)
+flextable_irda(
+  x,
+  font = "Calibri Light",
+  digits = 1,
+  big.mark = " ",
+  decimal.mark = ",",
+  ...
+)
+}
+\arguments{
+\item{x}{A \code{flextable} object, typically created with
+\code{flextable::flextable()}.}
+
+\item{font}{Font family used for the table. Defaults to \code{"Calibri Light"}.}
+
+\item{digits}{Number of decimal places for double columns.}
+
+\item{big.mark}{Thousands separator used when formatting doubles.}
+
+\item{decimal.mark}{Decimal separator used when formatting doubles.}
+
+\item{...}{Reserved for future use.}
 }
 \value{
-A flextable object.
+The themed \code{flextable} object.
 }
 \description{
-This function applies a custom theme suitable for IRDA visualizations. It sets various graphical
-parameters such as text size, font, and element colors.
+Styles a \code{flextable::flextable()} object with the IRDA visual identity: Calibri
+Light typography, a dark-blue header with white bold text, light-grey zebra
+striping, French number formatting and thin dark inner borders.
+}
+\details{
+Unlike earlier versions, this function no longer modifies the package-wide
+flextable defaults with \code{flextable::set_flextable_defaults()}; every change
+is applied locally to \code{x}, so it has no global side effect.
 }
 \examples{
-p <- flextable::flextable(iris) |>
-  flextable_irda()
+if (requireNamespace("flextable", quietly = TRUE)) {
+  flextable::flextable(head(iris)) |>
+    flextable_irda()
+}
 
+}
+\seealso{
+\code{\link[=theme_gt_irda]{theme_gt_irda()}}, \code{\link[=datatable_irda]{datatable_irda()}}
 }

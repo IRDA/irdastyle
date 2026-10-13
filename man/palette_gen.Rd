@@ -2,23 +2,36 @@
 % Please edit documentation in R/palette_gen.R
 \name{palette_gen}
 \alias{palette_gen}
-\title{Generate a Color Palette Function}
+\title{Generate an IRDA Palette Function}
 \usage{
 palette_gen(palette = "main", direction = 1)
 }
 \arguments{
-\item{palette}{Name of the palette to use, defaults to 'main'.}
+\item{palette}{Name of the palette to use, defaults to \code{"main"}.}
 
-\item{direction}{Direction to arrange colors, 1 for normal, -1 for reversed.}
+\item{direction}{Direction of the colour sequence: \code{1} (default) keeps the
+palette order, \code{-1} reverses it.}
 }
 \value{
-A function that generates color palettes.
+A function of one argument (\code{n}) returning a character vector of
+hexadecimal colour codes.
 }
 \description{
-This function generates a function that returns a specified number of colors from a given palette,
-potentially reversing the direction of the color sequence.
+Builds the palette function expected by the \code{palette} argument of
+\code{\link[ggplot2:discrete_scale]{ggplot2::discrete_scale()}}. The returned function takes a single integer
+\code{n} and returns \code{n} colours. When more colours are requested than the
+palette holds, the palette is smoothly interpolated with
+\code{\link[grDevices:colorRamp]{grDevices::colorRampPalette()}} instead of failing, so scales stay usable
+with many groups.
 }
 \examples{
-color_function <- palette_gen("main")
-color_function(3)
+pal <- palette_gen()
+pal(3)
+pal(10) # interpolated because the palette holds fewer than 10 colours
+
+palette_gen(direction = -1)(3)
+
+}
+\seealso{
+\code{\link[=irda_palette]{irda_palette()}}, \code{\link[=scale_color_irda]{scale_color_irda()}}, \code{\link[=scale_fill_irda]{scale_fill_irda()}}
 }

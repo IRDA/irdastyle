@@ -2,18 +2,36 @@
 % Please edit documentation in R/datatable_irda.R
 \name{datatable_irda}
 \alias{datatable_irda}
-\title{Apply IRDA Theme to datatable Objects}
+\title{Apply the IRDA Theme to 'DT' Data Tables}
 \usage{
-datatable_irda(x, ...)
+datatable_irda(x, options = list(), ...)
+}
+\arguments{
+\item{x}{A data frame (or matrix) to display.}
+
+\item{options}{A list of DataTables options that are merged on top of the
+IRDA defaults. Use this to override any of the default options (for
+example \code{pageLength} or \code{dom}) without losing the theme.}
+
+\item{...}{Additional arguments passed on to \code{\link[DT:datatable]{DT::datatable()}}, such as
+\code{class}, \code{rownames} or \code{filter}.}
 }
 \value{
-A datatable object.
+A \code{datatable} HTML widget.
 }
 \description{
-This function applies a custom theme suitable for IRDA visualizations. It sets various graphical
-parameters such as text size, font, and element colors.
+Creates a \code{\link[DT:datatable]{DT::datatable()}} styled with the IRDA visual identity and a
+French interface. The header gets a dark-blue background with white bold
+text and the body uses Calibri Light in dark blue.
 }
 \examples{
-p <- datatable_irda(iris)
+if (requireNamespace("DT", quietly = TRUE)) {
+  datatable_irda(head(iris))
+  # override a default option while keeping the theme
+  datatable_irda(head(iris), options = list(pageLength = 5))
+}
 
+}
+\seealso{
+\code{\link[=theme_gt_irda]{theme_gt_irda()}}, \code{\link[=flextable_irda]{flextable_irda()}}
 }

@@ -1,0 +1,131 @@
+---
+title: "Démarrer avec irdastyle"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Démarrer avec irdastyle}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  out.width = "100%"
+)
+```
+
+## Introduction
+
+Le package `irdastyle` applique l'identité visuelle de l'IRDA à vos sorties R :
+graphiques `ggplot2`, tableaux `gt` et `flextable`, graphiques `echarts4r` et
+tables interactives `DT`. Tous les thèmes partagent une même palette de
+couleurs, ce qui garantit une apparence cohérente d'un support à l'autre.
+
+```{r}
+library(irdastyle)
+```
+
+## Couleurs et palettes
+
+Toutes les couleurs de la charte sont exposées par `irda_colors()`. La fonction
+renvoie un vecteur nommé de codes hexadécimaux.
+
+```{r}
+irda_colors()
+```
+
+On peut aussi n'en sélectionner que quelques-unes :
+
+```{r}
+irda_colors(c("darkblue", "green", "red"))
+```
+
+La palette qualitative par défaut, `"main"`, est ordonnée du contraste le plus
+fort au plus faible :
+
+```{r}
+irda_palette()
+```
+
+`palette_gen()` construit la fonction de palette utilisée par les échelles. Si
+vous demandez plus de couleurs que la palette n'en contient, les couleurs sont
+interpolées automatiquement plutôt que de générer une erreur :
+
+```{r}
+pal <- palette_gen()
+pal(10)
+```
+
+## Graphiques ggplot2
+
+`theme_irda()` fournit le thème complet (typographie, grilles, marges) et
+`scale_color_irda()` / `scale_fill_irda()` appliquent la palette.
+
+```{r, fig.height = 4}
+library(ggplot2)
+
+ggplot(iris, aes(Sepal.Length, Sepal.Width, colour = Species)) +
+  geom_point() +
+  theme_irda() +
+  scale_color_irda()
+```
+
+Pour un graphique en barres, on utilise l'échelle de remplissage. L'argument
+`direction = -1` inverse l'ordre des couleurs :
+
+```{r, fig.height = 4}
+ggplot(iris, aes(Species, fill = Species)) +
+  geom_bar() +
+  theme_irda(legend.position = "none") +
+  scale_fill_irda(direction = -1)
+```
+
+## Tableaux gt
+
+```{r}
+gt::gt(head(iris)) |>
+  theme_gt_irda()
+```
+
+## Tableaux flextable
+
+`flextable_irda()` s'applique à un objet `flextable`. Il faut au préalable
+convertir vos données avec `flextable::flextable()`.
+
+```{r, eval = requireNamespace("flextable", quietly = TRUE)}
+flextable::flextable(head(iris)) |>
+  flextable_irda()
+```
+
+## Graphiques echarts4r
+
+`e_theme_irda()` applique le thème aux graphiques interactifs d'`echarts4r`.
+
+```{r, eval = requireNamespace("echarts4r", quietly = TRUE)}
+iris |>
+  echarts4r::e_charts(Sepal.Length) |>
+  echarts4r::e_scatter(Sepal.Width) |>
+  e_theme_irda()
+```
+
+## Tables interactives DT
+
+`datatable_irda()` enveloppe `DT::datatable()` avec un thème IRDA et une
+interface en français. Les options DataTables personnalisées sont fusionnées
+avec celles du thème :
+
+```{r, eval = requireNamespace("DT", quietly = TRUE)}
+datatable_irda(head(iris), options = list(pageLength = 5))
+```
+
+## Aller plus loin
+
+- Consultez `?theme_irda`, `?irda_palette` et `?datatable_irda` pour la
+  documentation complète.
+- Les thèmes de tableaux dépendent de paquets optionnels (`gt`, `flextable`,
+  `DT`, `echarts4r`) : un message d'erreur explicite est renvoyé si le paquet
+  requis est absent.

@@ -1,18 +1,38 @@
 Package: irdastyle
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: IRDA Visual Identity Themes for 'ggplot2', 'gt', 'flextable',
+    'echarts4r' and 'DT'
+Version: 0.2.0
+Authors@R: 
+    person("Cédric", "Bouffard", email = "80600509+cedricbouffard@users.noreply.github.com",
+           role = c("aut", "cre"))
+Description: Provides a consistent set of colours, palettes and themes that
+    apply the visual identity of the IRDA (Institut de recherche et de
+    développement en agroenvironnement) to common R outputs. The package
+    ships 'ggplot2' themes and discrete colour/fill scales, a 'gt' table
+    theme, a 'flextable' theme, an 'echarts4r' theme and a 'DT' datatable
+    helper, all built on a single shared colour palette.
+License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.3.1
-Imports: 
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends:
+    R (>= 4.1)
+Imports:
+    ggplot2,
+    grDevices
+Suggests:
     DT,
     echarts4r,
     flextable,
-    ggplot2,
-    gt
+    fontawesome,
+    gt,
+    knitr,
+    officer,
+    pagedown,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    withr
+VignetteBuilder:
+    knitr
+Config/testthat/edition: 3

@@ -2,21 +2,33 @@
 % Please edit documentation in R/echarts_theme.R
 \name{e_theme_irda}
 \alias{e_theme_irda}
-\title{Apply IRDA Theme to echarts Objects}
+\title{Apply the IRDA Theme to 'echarts4r' Charts}
 \usage{
 e_theme_irda(x, ...)
 }
+\arguments{
+\item{x}{An \code{echarts4r} chart object.}
+
+\item{...}{Additional arguments passed on to
+\code{\link[echarts4r:theme]{echarts4r::e_theme_custom()}}.}
+}
 \value{
-A echarts object.
+The \code{echarts4r} chart object with the IRDA theme applied.
 }
 \description{
-This function applies a custom theme suitable for IRDA visualizations. It sets various graphical
-parameters such as text size, font, and element colors.
+Applies a custom \code{\link[echarts4r:theme]{echarts4r::e_theme_custom()}} theme built from the IRDA
+colour palette. The theme is stored as a package constant, so repeated
+calls do not rebuild the underlying JSON payload.
 }
 \examples{
-iris|>
-dplyr::group_by(Species) |>
-  echarts4r::e_charts(Sepal.Length) |>
-  echarts4r::e_scatter(Sepal.Width) |>
-  e_theme_irda()
+if (requireNamespace("echarts4r", quietly = TRUE)) {
+  iris |>
+    echarts4r::e_charts(Sepal.Length) |>
+    echarts4r::e_scatter(Sepal.Width) |>
+    e_theme_irda()
+}
+
+}
+\seealso{
+\code{\link[=theme_irda]{theme_irda()}}, \code{\link[=irda_palette]{irda_palette()}}
 }

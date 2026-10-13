@@ -2,18 +2,33 @@
 % Please edit documentation in R/gt_irda.R
 \name{theme_gt_irda}
 \alias{theme_gt_irda}
-\title{Apply IRDA Theme to gt Objects}
+\title{Apply the IRDA Theme to 'gt' Tables}
 \usage{
-theme_gt_irda(x, ...)
+theme_gt_irda(x, font = "Calibri Light", ...)
+}
+\arguments{
+\item{x}{A \code{gt_tbl} object, typically created with \code{\link[gt:gt]{gt::gt()}}.}
+
+\item{font}{Font family used for the table. Defaults to \code{"Calibri Light"}.}
+
+\item{...}{Additional arguments passed to \code{\link[gt:tab_options]{gt::tab_options()}}, allowing any
+of the default options to be overridden.}
 }
 \value{
-A gt object.
+The themed \code{gt_tbl} object.
 }
 \description{
-This function applies a custom theme suitable for IRDA visualizations. It sets various graphical
-parameters such as text size, font, and element colors.
+Styles a \code{\link[gt:gt]{gt::gt()}} table with the IRDA visual identity: Calibri Light
+typography, a dark-blue header, zebra striping in light grey and a green
+row-group background.
 }
 \examples{
-p <- gt::gt(iris) |>
-     theme_gt_irda()
+if (requireNamespace("gt", quietly = TRUE)) {
+  gt::gt(head(iris)) |>
+    theme_gt_irda()
+}
+
+}
+\seealso{
+\code{\link[=theme_irda]{theme_irda()}}, \code{\link[=flextable_irda]{flextable_irda()}}
 }

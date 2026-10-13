@@ -1,0 +1,6 @@
+name: IRDA Report
+description: >
+  Un rapport paginé (HTML, et PDF via Chrome) appliquant l'identité visuelle
+  de l'IRDA. Basé sur pagedown::html_paged, avec les composants de style
+  brochure.css (encadrés, encadrés de valeur, sauts de section, etc.).
+create_dir: true

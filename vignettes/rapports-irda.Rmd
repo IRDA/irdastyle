@@ -1,0 +1,117 @@
+---
+title: "Rapports IRDA"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Rapports IRDA}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+## Vue d'ensemble
+
+`irdastyle` fournit un gabarit de rapport paginé appliquant l'identité visuelle
+de l'IRDA. Il s'appuie sur [pagedown::html_paged()] et produit un document HTML
+paginé convertible en PDF, avec :
+
+- une page de couverture (bandeau, logo et image) ;
+- des en-têtes et pieds de page configurables depuis le YAML ;
+- une numérotation des sections et une table des matières ;
+- de nombreux composants de mise en forme : encadrés, boîtes de valeur,
+  sauts de section pleine page, barres de progression, chronologies, etc.
+
+Le gabarit dépend du paquet `pagedown` (et de Chrome/Chromium pour l'export
+PDF). Installez-le avec `install.packages("pagedown")`.
+
+## Créer un rapport
+
+La fonction `create_irda_report()` copie le gabarit complet (source `.Rmd`,
+feuille de style `brochure.css`, script `header_overrides.html` et images de
+couverture) dans un dossier, puis l'ouvre pour édition.
+
+```{r}
+library(irdastyle)
+
+# Crée le dossier "mon_rapport/" contenant "mon_rapport.Rmd" et ses ressources
+create_irda_report(path = ".", name = "mon_rapport")
+```
+
+Il ne reste plus qu'à éditer le `.Rmd` et à le rendre :
+
+```{r}
+rmarkdown::render("mon_rapport/mon_rapport.Rmd")
+```
+
+## En-tête YAML
+
+Le comportement du gabarit se règle dans le YAML : métadonnées du document,
+en-têtes/pieds de page et position du numéro de page.
+
+```yaml
+---
+title: "Titre du rapport"
+subtitle: "Type de rapport"
+author: "Responsable scientifique : Prénom Nom, Ph. D."
+date: "Date : Février 2026"
+header-left: "Rapport IRDA"
+header-right: "IRDA"
+footer-left: ""
+footer-right: ""
+page-number-position: "alternate"   # "right" ou "alternate"
+output: irdastyle::irda_paged
+---
+```
+
+La sortie `irdastyle::irda_paged` applique automatiquement la feuille de style
+et le script du gabarit. On peut lui passer des options supplémentaires :
+
+```{r}
+irda_paged(toc = TRUE, toc_title = "Sommaire", number_sections = FALSE)
+```
+
+## Composants de mise en forme
+
+Les composants s'écrivent en Markdown avec des `div` de classe. Par exemple :
+
+```markdown
+::: {.infobox .info}
+#### Recommandation
+Concentrer l'application d'engrais sur les zones à fort rendement marginal.
+:::
+
+::: {.value-box-grid}
+::: {.value-box .primary}
+<span class="value">+15%</span>
+<span class="label">Rendement</span>
+:::
+:::
+
+::: {.section-break .secondary}
+
+# Deuxième section
+
+:::
+```
+
+D'autres variantes sont disponibles : `.infobox .success|.warning|.danger`,
+`.callout .tip|.warning`, `.progress-container`, `.timeline`, `.metric-card`,
+`.key-finding`, `.summary-box`, `.scorecard`, etc. La liste complète figure en
+commentaire au début de `brochure.css`.
+
+## Exporter en PDF
+
+`render_irda_pdf()` convertit le rapport en PDF à l'aide de Chrome/Chromium
+(via [pagedown::chrome_print()]) :
+
+```{r}
+render_irda_pdf("mon_rapport/mon_rapport.Rmd")
+```
+
+Le chemin du PDF généré est renvoyé de façon invisible.

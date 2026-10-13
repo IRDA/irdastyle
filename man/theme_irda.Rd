@@ -2,23 +2,48 @@
 % Please edit documentation in R/theme_irda.R
 \name{theme_irda}
 \alias{theme_irda}
-\title{Apply IRDA Theme to ggplot Objects}
+\title{Apply the IRDA Theme to 'ggplot2' Plots}
 \usage{
-theme_irda(..., base_size = 12)
+theme_irda(base_size = 12, base_family = NULL, legend.position = "bottom", ...)
 }
 \arguments{
-\item{base_size}{Base text size for the plot elements (default is 12).}
+\item{base_size}{Base font size, in points, for all text elements.}
+
+\item{base_family}{Base font family. Defaults to \code{NULL}, which resolves to
+the generic \code{"sans"} family; on Windows \code{"sans"} is aliased to
+"Calibri Light" (see the \emph{Details} section).}
+
+\item{legend.position}{Position of the legend. Passed to
+\code{\link[ggplot2:theme]{ggplot2::theme()}}; use \code{"none"} to hide the legend.}
+
+\item{...}{Additional theme elements passed to \code{\link[ggplot2:theme]{ggplot2::theme()}}, allowing
+any part of the theme to be overridden.}
 }
 \value{
-A ggplot2 theme object.
+A \code{ggplot2} theme object.
 }
 \description{
-This function applies a custom theme suitable for IRDA visualizations. It sets various graphical
-parameters such as text size, font, and element colors.
+A complete \code{\link[ggplot2:theme]{ggplot2::theme()}} implementing the IRDA visual identity:
+Calibri Light typography, bold dark-blue axis text, light horizontal major
+grid lines, no minor grid, a borderless panel and a bottom legend.
+}
+\details{
+On Windows the "Calibri Light" family is aliased to the generic \code{"sans"}
+family (via \code{grDevices::windowsFonts()}) so that it is used on screen while
+remaining valid on non-screen devices such as PDF or PostScript. On other
+platforms \code{"sans"} resolves to the default sans-serif family, so the theme
+degrades gracefully without emitting missing-font warnings. Pass an explicit
+\code{base_family} to use another font, keeping in mind that the chosen family
+must be available to the device you render with.
 }
 \examples{
-ggplot(data = iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+library(ggplot2)
+ggplot(iris, aes(Sepal.Length, Sepal.Width, colour = Species)) +
   geom_point() +
   theme_irda() +
   scale_color_irda()
+
+}
+\seealso{
+\code{\link[=scale_color_irda]{scale_color_irda()}}, \code{\link[=scale_fill_irda]{scale_fill_irda()}}
 }

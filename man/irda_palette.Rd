@@ -2,19 +2,27 @@
 % Please edit documentation in R/irda_palette.R
 \name{irda_palette}
 \alias{irda_palette}
-\title{Retrieve IRDA Color Palettes}
+\title{Retrieve IRDA Colour Palettes}
 \usage{
 irda_palette(palette = "main")
 }
 \arguments{
-\item{palette}{Name of the palette to retrieve, defaults to 'main'.}
+\item{palette}{Name of the palette to retrieve. Currently only \code{"main"}
+is available. Use \code{\link[=irda_palettes]{irda_palettes()}} to list the available palettes.}
 }
 \value{
-A vector of color hex codes.
+A character vector of hexadecimal colour codes.
 }
 \description{
-This function provides a selection of color palettes designed for IRDA visualizations.
+Returns an ordered vector of IRDA colours. The \code{"main"} palette is the
+default qualitative palette used across the package and is ordered so that
+the most visually distinct colours come first.
 }
 \examples{
-colors <- irda_palette("main")
+irda_palette()
+irda_palette("main")
+
+}
+\seealso{
+\code{\link[=irda_colors]{irda_colors()}}, \code{\link[=scale_color_irda]{scale_color_irda()}}, \code{\link[=scale_fill_irda]{scale_fill_irda()}}
 }

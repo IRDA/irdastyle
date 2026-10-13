@@ -1,0 +1,14 @@
+# R build / check artefacts
+*.Rproj
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+doc/
+Meta/
+inst/doc/
+*.tar.gz
+*.Rcheck/
+
+# RStudio / editors
+.Renviron

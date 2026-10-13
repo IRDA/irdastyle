@@ -1,20 +1,9 @@
-#' Apply IRDA Theme to echarts Objects
-#'
-#' This function applies a custom theme suitable for IRDA visualizations. It sets various graphical
-#' parameters such as text size, font, and element colors.
-#'
-#' @return A echarts object.
-#' @export
-#' @examples
-#' iris|>
-#' dplyr::group_by(Species) |>
-#'   echarts4r::e_charts(Sepal.Length) |>
-#'   echarts4r::e_scatter(Sepal.Width) |>
-#'   e_theme_irda()
-# Theme function definition
-
-e_theme_irda <- function(x, ...){
-json='{
+# Cached IRDA theme for 'echarts4r' ---------------------------------------
+#
+# Stored as a package-level constant so the (fairly large) JSON payload is
+# parsed only once at build time rather than being rebuilt on every call to
+# `e_theme_irda()`.
+irda_echarts_theme <- '{
         "seriesCnt": "7",
         "backgroundColor": "rgba(0, 0, 0, 0)",
         "titleColor": "#002752",
@@ -62,7 +51,6 @@ json='{
         "axes": [
             {
                 "type": "all",
-                "name": "通用坐标轴",
                 "axisLineShow": true,
                 "axisLineColor": "#6E7079",
                 "axisTickShow": true,
@@ -81,7 +69,6 @@ json='{
             },
             {
                 "type": "category",
-                "name": "类目坐标轴",
                 "axisLineShow": true,
                 "axisLineColor": "#002752",
                 "axisTickShow": true,
@@ -100,7 +87,6 @@ json='{
             },
             {
                 "type": "value",
-                "name": "数值坐标轴",
                 "axisLineShow": false,
                 "axisLineColor": "#6E7079",
                 "axisTickShow": false,
@@ -119,7 +105,6 @@ json='{
             },
             {
                 "type": "log",
-                "name": "对数坐标轴",
                 "axisLineShow": false,
                 "axisLineColor": "#6E7079",
                 "axisTickShow": false,
@@ -138,7 +123,6 @@ json='{
             },
             {
                 "type": "time",
-                "name": "时间坐标轴",
                 "axisLineShow": true,
                 "axisLineColor": "#e7e6e6",
                 "axisTickShow": true,
@@ -175,6 +159,29 @@ json='{
     }
 '
 
-
-  echarts4r::e_theme_custom(x,json)
+#' Apply the IRDA Theme to 'echarts4r' Charts
+#'
+#' Applies a custom [echarts4r::e_theme_custom()] theme built from the IRDA
+#' colour palette. The theme is stored as a package constant, so repeated
+#' calls do not rebuild the underlying JSON payload.
+#'
+#' @param x An `echarts4r` chart object.
+#' @param ... Additional arguments passed on to
+#'   [echarts4r::e_theme_custom()].
+#'
+#' @return The `echarts4r` chart object with the IRDA theme applied.
+#'
+#' @examples
+#' if (requireNamespace("echarts4r", quietly = TRUE)) {
+#'   iris |>
+#'     echarts4r::e_charts(Sepal.Length) |>
+#'     echarts4r::e_scatter(Sepal.Width) |>
+#'     e_theme_irda()
+#' }
+#'
+#' @seealso [theme_irda()], [irda_palette()]
+#' @export
+e_theme_irda <- function(x, ...) {
+  .irda_require("echarts4r")
+  echarts4r::e_theme_custom(x, irda_echarts_theme, ...)
 }
