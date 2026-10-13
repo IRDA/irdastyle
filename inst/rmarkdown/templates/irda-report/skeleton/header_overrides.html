@@ -98,25 +98,30 @@
       const assets = window.IRDA_ASSETS || {};
 
       // Add bandeau droit
-      const bandeau = document.createElement('div');
-      bandeau.className = 'bandeau-droit';
-      const bandeauSrc = assets.bandeau || 'bandeaugauche.png';
-      bandeau.style.backgroundImage = "url('" + bandeauSrc + "')";
-      frontPage.appendChild(bandeau);
+      if (assets.bandeau) {
+        const bandeau = document.createElement('div');
+        bandeau.className = 'bandeau-droit';
+        bandeau.style.backgroundImage = "url('" + assets.bandeau + "')";
+        frontPage.appendChild(bandeau);
+      }
 
       // Add logo IRDA
-      const logo = document.createElement('img');
-      logo.src = assets.logo || 'logo.png';
-      logo.className = 'logo-irda';
-      logo.alt = 'Logo IRDA';
-      frontPage.appendChild(logo);
+      if (assets.logo) {
+        const logo = document.createElement('img');
+        logo.src = assets.logo;
+        logo.className = 'logo-irda';
+        logo.alt = 'Logo IRDA';
+        frontPage.appendChild(logo);
+      }
 
       // Add image couverture
-      const imgCouverture = document.createElement('img');
-      imgCouverture.src = assets.cover || 'image_couverture.png';
-      imgCouverture.className = 'image-couverture';
-      imgCouverture.alt = 'Image de couverture';
-      frontPage.appendChild(imgCouverture);
+      if (assets.cover) {
+        const imgCouverture = document.createElement('img');
+        imgCouverture.src = assets.cover;
+        imgCouverture.className = 'image-couverture';
+        imgCouverture.alt = 'Image de couverture';
+        frontPage.appendChild(imgCouverture);
+      }
     }
 
     // ============================================

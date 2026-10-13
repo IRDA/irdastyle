@@ -18,11 +18,17 @@
   file
 }
 
-# Data URI for a bundled asset, or `NA` when it cannot be found. Data URIs are
+# Data URI for an asset, preferring a local file in the working directory
+# and falling back to the bundled copy in the template skeleton. Data URIs are
 # used (rather than `file://` URLs) because they are always loadable, including
-# from headless Chrome when the report is not self-contained.
+# from headless Chrome and browser iframes without triggering 404s or local
+# file security restrictions.
 .irda_asset_data_uri <- function(file) {
-  path <- file.path(.irda_template_dir(), file)
+  path <- if (length(file) == 1L && file.exists(file)) {
+    normalizePath(file, winslash = "/", mustWork = FALSE)
+  } else {
+    file.path(.irda_template_dir(), file)
+  }
   if (!file.exists(path)) {
     return(NA_character_)
   }
@@ -33,21 +39,15 @@
 }
 
 # Build the inline script that tells header_overrides.html where the cover
-# images live. Only assets that are missing from the current directory are
-# overridden (with a data URI); local files keep being referenced by their
-# relative name so users can customise them.
+# images live. Assets are embedded as data URIs so the report is fully
+# self-contained and avoids 404 errors during headless Chrome printing.
 .irda_assets_script <- function() {
   files <- c(
     logo = "logo.png",
     cover = "image_couverture.png",
     bandeau = "bandeaugauche.png"
   )
-  missing <- files[!file.exists(files)]
-  if (length(missing) == 0L) {
-    return(NULL)
-  }
-
-  uris <- vapply(missing, .irda_asset_data_uri, character(1))
+  uris <- vapply(files, .irda_asset_data_uri, character(1))
   uris <- uris[!is.na(uris)]
   if (length(uris) == 0L) {
     return(NULL)
